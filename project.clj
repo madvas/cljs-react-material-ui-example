@@ -2,10 +2,11 @@
   :description "Example app for library cljs-react-material-ui"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
-            :url "http://www.eclipse.org/legal/epl-v10.html"}
+            :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.8.40"]
-                 [org.omcljs/om "1.0.0-alpha32"]
+                 [org.omcljs/om "1.0.0-alpha34" :exclusions [cljsjs/react
+                                                             cljsjs/react-dom]]
                  [com.stuartsierra/component "0.3.1"]
                  [com.cemerick/piggieback "0.2.1"]
                  [figwheel-sidecar "0.5.0-2" :scope "test"]
@@ -18,16 +19,17 @@
                  [juxt.modular/maker "0.5.0"]
                  [juxt.modular/wire-up "0.5.0"]
                  [juxt.modular/aleph "0.1.4"]
-                 [com.rpl/specter "0.9.3"]
-                 [cljsjs/material-ui "0.14.4-11"]]
+                 [com.andrewmcveigh/cljs-time "0.4.0"]
+                 [cljs-react-material-ui "0.1.8"]
+                 [prismatic/schema "1.1.1"]]
 
   :plugins [[lein-cljsbuild "1.1.3"]]
   :min-lein-version "2.0.0"
-  :uberjar-name "cljs-react-material-ui.jar"
+  :uberjar-name "cljs-react-material-ui-example.jar"
   :clean-targets ^{:protect false} ["resources/public/js"]
-  :source-paths ["src/clj" "src/cljs" "src/cljc"]
+  :source-paths ["src/clj" "src/cljs"]
 
-  :cljsbuild {:builds {:app {:source-paths ["src/cljs" "src/cljc"]
+  :cljsbuild {:builds {:app {:source-paths ["src/cljs"]
                              :figwheel     true
                              :compiler     {:main            cljs-react-material-ui-example.core
                                             :output-to       "resources/public/js/app.js"

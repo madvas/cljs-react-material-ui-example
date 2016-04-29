@@ -25,7 +25,7 @@
      :build-ids        ["dev"]
      :all-builds       [{:id           "dev"
                          :figwheel     true
-                         :source-paths ["src/cljs" "src/cljc"]
+                         :source-paths ["src/cljs"]
                          :compiler     opts}]}))
 
 (ra/cljs-repl)

@@ -1,85 +1,243 @@
 (ns cljs-react-material-ui-example.core
-  (:require [goog.dom :as gdom]
+  (:require [cljsjs.material-ui]
+            [cljs-react-material-ui.icons :as ic]
+            [cljs-react-material-ui.core :as ui]
+            [goog.dom :as gdom]
             [om.next :as om :refer-macros [defui]]
-            [om.dom :as dom]
             [cljs-react-material-ui-example.parser :as p]
             [cljs-react-material-ui-example.util :as u]
-            [clojure.string :as str]
-            [goog.events :as e]
-            [goog.events.EventType :as et]
-            [cljs-react-material-ui.core :as mui]
-    #_[cljs-react-material-ui-example.icons :as mic]
-            )
-  (:import [goog History]
-           [goog.history EventType]))
+            [om.dom :as dom]
+            [cljs-time.format :as tf]
+            [cljs-time.coerce :refer [from-date]]
+            [cljs-react-material-ui-example.state :refer [init-state]]
+            [schema.core :as s :include-macros true]))
 
 (enable-console-print!)
 
-(println "heren")
+(defn get-step-content [step-index]
+  (case step-index
+    0 "Select campaign settings..."
+    1 "What is an ad group anyways?"
+    2 "This is the bit I really care about!"
+    "You're a long way from home sonny jim!"))
 
-(def state (atom {}))
+(defui MyStepper
+  Object
+  (componentWillMount [this]
+    (om/set-state! this {:finished? false :step-index 0}))
+  (render [this]
+    (let [{:keys [finished? step-index]} (om/get-state this)]
+      (dom/div
+        #js {:className "row center-xs mar-top-20"}
+        (ui/paper
+          {:class-name "col-xs-12 col-md-8 col-lg-6 pad-10"}
+          (ui/stepper
+            {:active-step step-index}
+            (ui/step
+              (ui/step-label "Select campaign settings"))
+            (ui/step
+              (ui/step-label "Create an ad group"))
+            (ui/step
+              (ui/step-label "Create an ad")))
+          (if finished?
+            (dom/div
+              nil
+              (ui/floating-action-button
+                {:secondary    true
+                 :on-touch-tap #(om/set-state! this {:finished? false :step-index 0})}
+                (ic/content-clear)))
+            (dom/div
+              nil
+              (dom/p #js {:className "mar-bot-20"} (get-step-content step-index))
+              (dom/div
+                nil
+                (ui/flat-button
+                  {:label        "Back"
+                   :disabled     (= step-index 0)
+                   :on-touch-tap #(om/set-state! this {:step-index (- step-index 1)})})
+                (ui/raised-button
+                  {:label        (if (= step-index 2) "Finish" "Next")
+                   :primary      true
+                   :on-touch-tap #(om/set-state! this {:step-index (+ step-index 1)
+                                                       :finished?  (>= step-index 2)})}))))))))
+
+  (def my-stepper (om/factory MyStepper {})))
+
+(defui Person
+  static om/Ident
+  (ident [this {:keys [db/id]}]
+    [:person/by-id id])
+
+  static om/IQuery
+  (query [this]
+    [:db/id :person/name :person/date {:person/status [:status/name]} {:person/happiness [:db/id :happiness/name]}])
+
+  Object
+  (render [this]
+    (let [{:keys [person/name person/date person/status person/happiness]} (om/props this)]
+      (ui/table-row
+        (ui/table-row-column name)
+        (ui/table-row-column (tf/unparse (:date tf/formatters) (from-date date)))
+        (ui/table-row-column (:status/name status))
+        (ui/table-row-column (:happiness/name happiness))))))
+
+(def person (om/factory Person {}))
+
+(defn my-table [people]
+  (ui/table
+    {:height "250px"}
+    (ui/table-header
+      {:display-select-all  false
+       :adjust-for-checkbox false}
+      (ui/table-row
+        (ui/table-header-column "Name")
+        (ui/table-header-column "Date")
+        (ui/table-header-column "Status")
+        (ui/table-header-column "Happiness")))
+    (ui/table-body
+      (map person people))))
+
+
+(defn radio-btn-group [c happiness-list val]
+  (let [[sad normal superb] happiness-list]
+    (ui/radio-button-group
+      {:person/name    "happiness"
+       :value-selected (str val)
+       :on-change      #(om/transact! c `[(person-new/change {:value ~(js/parseInt %2)
+                                                              :path  [:person/happiness 1]})
+                                          :person/new])
+       :class-name     "row between-xs mar-ver-15"}
+      (ui/radio-button
+        {:value          (str (:db/id sad))
+         :label          (:happiness/name sad)
+         :class-name     "col-xs-4"
+         :checked-icon   (ic/social-sentiment-dissatisfied)
+         :unchecked-icon (ic/social-sentiment-dissatisfied)})
+      (ui/radio-button
+        {:value      (str (:db/id normal))
+         :label      (:happiness/name normal)
+         :class-name "col-xs-4"})
+      (ui/radio-button
+        {:value          (str (:db/id superb))
+         :label          (:happiness/name superb)
+         :class-name     "col-xs-4"
+         :checked-icon   (ic/action-favorite)
+         :unchecked-icon (ic/action-favorite-border)}))))
+
+(s/defschema ValidPerson
+  {:person/name      s/Str
+   :person/date      s/Inst
+   :person/status    [(s/one s/Keyword "status/by-id") s/Int]
+   :person/happiness [(s/one s/Keyword "happiness/by-id") s/Int]})
+
+(defui AppRoot
+  static om/IQuery
+  (query [this]
+    [{:person/list (om/get-query Person)}
+     {:status/list [:db/id :status/name]}
+     {:happiness/list [:db/id :happiness/name]}
+     {:person/new (om/get-query Person)}])
+  Object
+  (render [this]
+    (let [props (om/props this)
+          person-list (:person/list props)
+          status-list (:status/list props)
+          happiness-list (:happiness/list props)
+          person-new (:person/new props)
+          {:keys [drawer-open?]} (om/get-state this)]
+      (ui/mui-theme-provider
+        {:mui-theme (ui/get-mui-theme)}
+        (dom/div
+          {:class-name "h-100"}
+          (ui/app-bar
+            {:title "Material UI Om.Next App"
+             :icon-element-right
+                    (ui/flat-button
+                      {:label       "Github"
+                       :link-button true
+                       :href        "https://github.com/madvas/cljs-react-material-ui-example"
+                       :secondary   true
+                       :target      :_blank})
+             :on-left-icon-button-touch-tap
+                    #(om/set-state! this {:drawer-open? true})})
+          (ui/drawer
+            {:docked            false
+             :open              drawer-open?
+             :on-request-change #(om/set-state! this {:drawer-open? %})}
+            (ui/menu-item {:on-touch-tap #(println "Menu Item Clicked")} "Menu Item")
+            (ui/menu-item "Menu Item 2"))
+
+          (dom/div
+            #js {:className "row around-xs mar-top-20"}
+            (ui/paper
+              {:class-name "col-xs-11 col-md-6 col-lg-4"}
+              (ui/text-field
+                {:floating-label-text "Name"
+                 :class-name          "w-100"
+                 :value               (:person/name person-new)
+                 :on-change           #(om/transact! this `[(person-new/change {:value ~(u/target-val %)
+                                                                                :path  [:person/name]})
+                                                            :person/new])})
+              (ui/date-picker
+                {:hint-text  "Select Date"
+                 :mode       :landscape
+                 :class-name "w-100"
+                 :value      (:person/date person-new)
+                 :on-change  #(om/transact! this `[(person-new/change {:value ~%2
+                                                                       :path  [:person/date]})
+                                                   :person/new])})
+              (ui/auto-complete
+                {:data-source    (map :status/name status-list)
+                 :hint-text      "Type status"
+                 :full-width     true
+                 :open-on-focus  true
+                 :search-text    (or (:status/name
+                                       (u/find-by-key :db/id (second (:person/status person-new)) status-list))
+                                     "")
+
+                 :filter         (aget js/MaterialUI "AutoComplete" "caseInsensitiveFilter")
+                 :on-new-request (fn [chosen]
+                                   (let [status-id (:db/id (u/find-by-key :status/name chosen status-list))]
+                                     (om/transact! this `[(person-new/change {:value [:status/by-id ~status-id]
+                                                                              :path  [:person/status]})
+                                                          :person/new])))})
+
+              (radio-btn-group this happiness-list (get-in person-new [:person/happiness 1]))
+              (dom/div
+                #js {:className "row pad-10 reverse"}
+                (ui/raised-button
+                  {:label          "Add"
+                   :primary        true
+                   :label-position :before
+                   :icon           (ic/content-add-circle)
+                   :disabled       (boolean (s/check ValidPerson person-new))
+                   :on-touch-tap   #(om/transact! this `[(person-new/add)
+                                                         :person/new :person/list])})))
+
+            (ui/paper
+              {:class-name "col-xs-11 col-md-11 col-lg-7"}
+              (ui/mui-theme-provider
+                {:mui-theme (ui/get-mui-theme
+                              {:table-header-column
+                               {:text-color (ui/color :deep-orange500)}})}
+                (my-table person-list))))
+
+          (ui/mui-theme-provider
+            {:mui-theme (ui/get-mui-theme
+                          {:palette {:primary1-color (ui/color :amber600)
+                                     :shadow-color   (ui/color :deep-orange900)
+                                     :text-color     (ui/color :indigo900)}
+                           :stepper {:inactive-icon-color  (ui/color :deep-orange900)
+                                     :connector-line-color (ui/color :light-blue600)
+                                     :text-color           (ui/color :teal900)
+                                     :disabled-text-color  (ui/color :teal200)}})}
+            (my-stepper)))))))
 
 (def reconciler
   (om/reconciler
-    {:state  state
-     :parser (om/parser {:read p/read :mutate p/mutate})}))
-
-(def my-raw-theme
-  {:spacing     (aget js/MaterialUI "Styles" "Spacing")
-   :z-index     (aget js/MaterialUI "Styles" "ZIndex")
-   :font-family "Roboto, sans-serif"
-   :palette     {:primary1-color (mui/color :blue-grey500)
-                 :primary2-color (mui/color :cyan700)
-                 :primary3-color (mui/color :light-black)
-                 :accent1-color  (mui/color :amber600)
-                 :accent2-color  (mui/color :grey100)
-                 :accent3-color  (mui/color :grey500)}})
-
-(def my-raw-theme2
-  (assoc-in my-raw-theme [:palette :accent1-color] (mui/color :amber600)))
-
-(defui Table
-  Object
-  (componentWillMount [this])
-  (render [this]
-    (mui/table
-      (mui/table-header
-        (mui/table-row
-          (mui/table-header-column "ID")
-          (mui/table-header-column "wtf")))
-      (mui/table-body
-        (mui/table-row
-          (mui/table-row-column "Abc")
-          (mui/table-row-column "oolla"))))))
-
-(def table (om/factory Table {}))
-
-(defn blue-raised-btn [theme]
-  (assoc-in theme [:raised-button :primary-color] (mui/color :cyan700)))
-
-(defui AppRoot
-  Object
-  (render [this]
-    (mui/mui-root {:mui-theme (mui/get-mui-theme my-raw-theme)}
-                  (mui/app-bar {:title              "Tittle"
-                                ;:icon-element-left  (mui/icon-button (mic/social-notifications-none {}))
-                                :icon-element-right (mui/flat-button {:label "Save"})})
-                  (table)
-                  (mui/raised-button {:label "Theme 1" :primary true})
-                  (mui/with-theme blue-raised-btn
-                                  (mui/raised-button {:label "Theme 2" :primary true}))
-
-                  (mui/toolbar
-                    (mui/toolbar-group
-                      {:float "left"}
-                      (mui/drop-down-menu
-                        {:value 1}
-                        (mui/menu-item
-                          {:value        1
-                           :primary-text "All Broad"})
-                        (mui/menu-item
-                          {:value        2
-                           :primary-text "Lele"})))))))
+    {:state     (atom init-state)
+     :normalize true
+     :parser    (om/parser {:read p/read :mutate p/mutate})}))
 
 (om/add-root! reconciler AppRoot (gdom/getElement "app"))
 

@@ -7,7 +7,7 @@
             [cljs-react-material-ui-example.util :as u]))
 
 (defn http-listener-components [system config]
-  (assoc system :http-listener (new-webserver :port (u/s->int (:web-port config)))))
+  (assoc system :http-listener (new-webserver :port (u/str->int (:web-port config)))))
 
 (defn modular-bidi-router-components [system config]
   (assoc system :bidi-request-handler (mm/make new-router config)))

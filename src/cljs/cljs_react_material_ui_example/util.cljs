@@ -37,3 +37,6 @@
   (if-not (pred x)
     (apply f x args)
     x))
+
+(defn find-by-key [k v coll]
+  (first (filter #(= v (get % k)) coll)))

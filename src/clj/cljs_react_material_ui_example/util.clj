@@ -10,7 +10,7 @@
   (flush)
   (last args))
 
-(defn s->int [s]
+(defn str->int [s]
   (if (number? s)
     s
     (Integer/parseInt (re-find #"\A-?\d+" s))))

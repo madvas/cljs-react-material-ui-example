@@ -1,0 +1,1 @@
+web: java $JVM_OPTS -cp target/cljs-react-material-ui-example.jar clojure.main -m cljs-react-material-ui-example.prod-server
