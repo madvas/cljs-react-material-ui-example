@@ -1,7 +1,7 @@
 (ns cljs-react-material-ui-example.core
   (:require [cljsjs.material-ui]
-            [cljs-react-material-ui.icons :as ic]
             [cljs-react-material-ui.core :as ui]
+            [cljs-react-material-ui.icons :as ic]
             [goog.dom :as gdom]
             [om.next :as om :refer-macros [defui]]
             [cljs-react-material-ui-example.parser :as p]
@@ -59,9 +59,9 @@
                   {:label        (if (= step-index 2) "Finish" "Next")
                    :primary      true
                    :on-touch-tap #(om/set-state! this {:step-index (+ step-index 1)
-                                                       :finished?  (>= step-index 2)})}))))))))
+                                                       :finished?  (>= step-index 2)})})))))))))
 
-  (def my-stepper (om/factory MyStepper {})))
+(def my-stepper (om/factory MyStepper {}))
 
 (defui Person
   static om/Ident
