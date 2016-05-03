@@ -5,8 +5,7 @@
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/clojurescript "1.8.40"]
-                 [org.omcljs/om "1.0.0-alpha34" :exclusions [cljsjs/react
-                                                             cljsjs/react-dom]]
+                 [org.omcljs/om "1.0.0-alpha34" :exclusions [cljsjs/react]]
                  [com.stuartsierra/component "0.3.1"]
                  [com.cemerick/piggieback "0.2.1"]
                  [figwheel-sidecar "0.5.0-2" :scope "test"]
@@ -20,7 +19,7 @@
                  [juxt.modular/wire-up "0.5.0"]
                  [juxt.modular/aleph "0.1.4"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
-                 [cljs-react-material-ui "0.1.9"]
+                 [cljs-react-material-ui "0.2.11"]
                  [prismatic/schema "1.1.1"]]
 
   :plugins [[lein-cljsbuild "1.1.3"]]
