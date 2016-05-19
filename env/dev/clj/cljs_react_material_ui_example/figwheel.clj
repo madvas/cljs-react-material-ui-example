@@ -4,13 +4,13 @@
 
 
 (def opts
-  {:main             'cljs-react-material-ui-example.core
-   :asset-path       "/js"
-   :output-to        "resources/public/js/app.js"
-   :output-dir       "resources/public/js"
-   :parallel-build   true
-   :compiler-stats   true
-   :verbose          true})
+  {:main           'cljs-react-material-ui-example.core
+   :asset-path     "/js"
+   :output-to      "resources/public/js/app.js"
+   :output-dir     "resources/public/js"
+   :parallel-build true
+   :compiler-stats true
+   :verbose        true})
 
 (comment
   (b/build "src/cljs" opts))
@@ -21,7 +21,7 @@
 
 (defn start-fig! []
   (ra/start-figwheel!
-    {:figwheel-options {}
+    {:figwheel-options {:server-port 5309}
      :build-ids        ["dev"]
      :all-builds       [{:id           "dev"
                          :figwheel     true

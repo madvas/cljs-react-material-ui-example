@@ -4,7 +4,7 @@
 
 
 (def config
-  {:web-port 8081})
+  {:web-port 8999})
 
 (cljs-react-material-ui-example/dev-start config)
 (println (str "Started server on port " (:web-port config)))

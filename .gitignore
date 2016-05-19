@@ -6,6 +6,7 @@ pom.xml.asc
 *.jar
 *.class
 /.lein-*
+/cljs-react-material-ui-example.iml
 /.nrepl-port
 .hgignore
 .hg/
