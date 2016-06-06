@@ -19,7 +19,7 @@
                  [juxt.modular/wire-up "0.5.0"]
                  [juxt.modular/aleph "0.1.4"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
-                 [cljs-react-material-ui "0.2.15"]
+                 [cljs-react-material-ui "0.2.16"]
                  [prismatic/schema "1.1.1"]]
 
   :plugins [[lein-cljsbuild "1.1.3"]]

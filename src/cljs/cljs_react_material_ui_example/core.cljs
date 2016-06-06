@@ -140,10 +140,12 @@
   Object
   (render [this]
     (let [props (om/props this)
+          state (om/get-state this)
           person-list (:person/list props)
           status-list (:status/list props)
           happiness-list (:happiness/list props)
           person-new (:person/new props)
+          close-help #(om/update-state! this assoc :open-help? false)
           {:keys [drawer-open?]} (om/get-state this)]
       (ui/mui-theme-provider
         {:mui-theme (ui/get-mui-theme)}
@@ -212,7 +214,14 @@
                    :icon           (ic/content-add-circle)
                    :disabled       (boolean (s/check ValidPerson person-new))
                    :on-touch-tap   #(om/transact! this `[(person-new/add)
-                                                         :person/new :person/list])})))
+                                                         :person/new :person/list])})
+                (ui/raised-button
+                  {:label          "Help"
+                   :class-name     "mar-rig-10"
+                   :secondary      true
+                   :label-position :before
+                   :icon           (ic/action-help)
+                   :on-touch-tap   #(om/update-state! this assoc :open-help? true)})))
 
             (ui/paper
               {:class-name "col-xs-11 col-md-11 col-lg-7"}
@@ -231,7 +240,22 @@
                                      :connector-line-color (ui/color :light-blue600)
                                      :text-color           (ui/color :teal900)
                                      :disabled-text-color  (ui/color :teal200)}})}
-            (my-stepper)))))))
+            (my-stepper))
+          (ui/dialog
+            {:title            "Help"
+             :key              "dialog"
+             :modal            false
+             :open             (boolean (:open-help? state))
+             :actions          [(ui/raised-button
+                                  {:label        "Back"
+                                   :key          "back"
+                                   :on-touch-tap close-help})
+                                (ui/raised-button
+                                  {:label        "Thanks"
+                                   :key          "thanks"
+                                   :on-touch-tap close-help})]
+             :on-request-close close-help})
+          )))))
 
 (def reconciler
   (om/reconciler
