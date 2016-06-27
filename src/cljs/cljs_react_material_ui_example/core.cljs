@@ -150,7 +150,7 @@
       (ui/mui-theme-provider
         {:mui-theme (ui/get-mui-theme)}
         (dom/div
-          {:class-name "h-100"}
+          #js {:class-name "h-100"}
           (ui/app-bar
             {:title "Material UI Om.Next App"
              :icon-element-right
