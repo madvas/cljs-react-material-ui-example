@@ -26,8 +26,8 @@
     <orderEntry type="library" name="Leiningen: clj-stacktrace:0.2.8" level="project" />
     <orderEntry type="library" name="Leiningen: clj-time:0.11.0" level="project" />
     <orderEntry type="library" name="Leiningen: clj-tuple:0.2.2" level="project" />
-    <orderEntry type="library" name="Leiningen: cljs-react-material-ui:0.2.16" level="project" />
-    <orderEntry type="library" name="Leiningen: cljsjs/material-ui:0.15.0-3" level="project" />
+    <orderEntry type="library" name="Leiningen: cljs-react-material-ui:0.2.18" level="project" />
+    <orderEntry type="library" name="Leiningen: cljsjs/material-ui:0.15.1-1" level="project" />
     <orderEntry type="library" name="Leiningen: cljsjs/react-dom:15.0.1-1" level="project" />
     <orderEntry type="library" name="Leiningen: clojure-complete:0.2.4" level="project" />
     <orderEntry type="library" name="Leiningen: clout:2.1.2" level="project" />
@@ -116,7 +116,7 @@
     <orderEntry type="library" name="Leiningen: org.javassist/javassist:3.18.1-GA" level="project" />
     <orderEntry type="library" name="Leiningen: org.mozilla/rhino:1.7R5" level="project" />
     <orderEntry type="library" name="Leiningen: org.msgpack/msgpack:0.6.10" level="project" />
-    <orderEntry type="library" name="Leiningen: org.omcljs/om:1.0.0-alpha34" level="project" />
+    <orderEntry type="library" name="Leiningen: org.omcljs/om:1.0.0-alpha37" level="project" />
     <orderEntry type="library" name="Leiningen: org.ow2.asm/asm-all:4.2" level="project" />
     <orderEntry type="library" name="Leiningen: org.tobereplaced/lettercase:1.0.0" level="project" />
     <orderEntry type="library" name="Leiningen: org.tukaani/xz:1.5" level="project" />

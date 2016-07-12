@@ -10,7 +10,8 @@
             [cljs-time.format :as tf]
             [cljs-time.coerce :refer [from-date]]
             [cljs-react-material-ui-example.state :refer [init-state]]
-            [schema.core :as s :include-macros true]))
+            [schema.core :as s :include-macros true]
+            [print.foo :as pf :include-macros true]))
 
 (enable-console-print!)
 
@@ -130,6 +131,29 @@
    :person/status    [(s/one s/Keyword "status/by-id") s/Int]
    :person/happiness [(s/one s/Keyword "happiness/by-id") s/Int]})
 
+(defn handle-chip-delete [this idx]
+  (om/update-state! this (fn [state]
+                           (update state :chip-data (partial remove #(= (key %) idx))))))
+
+(defui MyChips
+  Object
+  (componentWillMount [this]
+    (om/set-state! this {:chip-data {0 "Clojure"
+                                     1 "Clojurescript"
+                                     2 "Om.Next"
+                                     3 "MaterialUI"}}))
+  (render [this]
+    (let [chip-data (:chip-data (om/get-state this))]
+      (ui/paper
+        {:class-name "col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 pad-10 mar-top-20 row"}
+        (for [chip (into [] chip-data)]
+          (ui/chip {:key   (key chip)
+                    :style {:margin-right 5}
+                    :on-request-delete #(handle-chip-delete this (key chip))}
+                   (val chip)))))))
+
+(def my-chips (om/factory MyChips))
+
 (defui AppRoot
   static om/IQuery
   (query [this]
@@ -150,16 +174,15 @@
       (ui/mui-theme-provider
         {:mui-theme (ui/get-mui-theme)}
         (dom/div
-          #js {:class-name "h-100"}
+          #js {:className "h-100"}
           (ui/app-bar
             {:title "Material UI Om.Next App"
              :icon-element-right
                     (ui/flat-button
-                      {:label       "Github"
-                       :link-button true
-                       :href        "https://github.com/madvas/cljs-react-material-ui-example"
-                       :secondary   true
-                       :target      :_blank})
+                      {:label     "Github"
+                       :href      "https://github.com/madvas/cljs-react-material-ui-example"
+                       :secondary true
+                       :target    :_blank})
              :on-left-icon-button-touch-tap
                     #(om/set-state! this {:drawer-open? true})})
           (ui/drawer
@@ -241,6 +264,7 @@
                                      :text-color           (ui/color :teal900)
                                      :disabled-text-color  (ui/color :teal200)}})}
             (my-stepper))
+          (my-chips)
           (ui/dialog
             {:title            "Help"
              :key              "dialog"
