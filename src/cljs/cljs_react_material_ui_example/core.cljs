@@ -102,12 +102,12 @@
 (defn radio-btn-group [c happiness-list val]
   (let [[sad normal superb] happiness-list]
     (ui/radio-button-group
-      {:person/name    "happiness"
+      {:name "happiness"
        :value-selected (str val)
-       :on-change      #(om/transact! c `[(person-new/change {:value ~(js/parseInt %2)
-                                                              :path  [:person/happiness 1]})
-                                          :person/new])
-       :class-name     "row between-xs mar-ver-15"}
+       :on-change #(om/transact! c `[(person-new/change {:value ~(js/parseInt %2)
+                                                         :path [:person/happiness 1]})
+                                     :person/new])
+       :class-name "row between-xs mar-ver-15"}
       (ui/radio-button
         {:value          (str (:db/id sad))
          :label          (:happiness/name sad)
