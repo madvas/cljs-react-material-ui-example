@@ -15,6 +15,7 @@
 
 (enable-console-print!)
 
+
 (defn get-step-content [step-index]
   (case step-index
     0 "Select campaign settings..."
