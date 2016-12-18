@@ -6,6 +6,7 @@
             [om.next :as om :refer-macros [defui]]
             [cljs-react-material-ui-example.parser :as p]
             [cljs-react-material-ui-example.util :as u]
+            [cljs-react-material-ui.chip-input.core :refer [chip-input]]
             [om.dom :as dom]
             [cljs-time.format :as tf]
             [cljs-time.coerce :refer [from-date]]
@@ -265,6 +266,11 @@
                                      :disabled-text-color  (ui/color :teal200)}})}
             (my-stepper))
           (my-chips)
+          (ui/paper
+            {:class-name "col-xs-12 col-md-8 col-md-offset-2 col-lg-6 col-lg-offset-3 pad-10 mar-top-20 row"}
+            (chip-input
+              {:full-width true
+               :default-value ["write" "here"]}))
           (ui/dialog
             {:title            "Help"
              :key              "dialog"
