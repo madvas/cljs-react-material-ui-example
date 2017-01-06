@@ -56,4 +56,3 @@
                                                {:compiler {:optimizations   :advanced
                                                            :closure-defines {:goog.DEBUG false}
                                                            :pretty-print    false}}}}}})
-
