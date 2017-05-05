@@ -213,7 +213,7 @@
                                                                        :path  [:person/date]})
                                                    :person/new])})
               (ui/auto-complete
-                {:data-source    (map :status/name status-list)
+                {:dataSource    (map :status/name status-list)
                  :hint-text      "Type status"
                  :full-width     true
                  :open-on-focus  true
