@@ -19,7 +19,7 @@
                  [juxt.modular/wire-up "0.5.0"]
                  [juxt.modular/aleph "0.1.4"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
-                 [cljs-react-material-ui "0.2.43"]
+                 [cljs-react-material-ui "0.2.44"]
                  [cljsjs/material-ui-chip-input "0.13.5-0"]
                  [prismatic/schema "1.1.1"]
                  [print-foo-cljs "2.0.0"]]
