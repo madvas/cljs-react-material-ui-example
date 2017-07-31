@@ -295,4 +295,3 @@
 
 (om/add-root! reconciler AppRoot (gdom/getElement "app"))
 
-
