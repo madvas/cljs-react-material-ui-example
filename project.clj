@@ -4,10 +4,12 @@
   :license {:name "Eclipse Public License"
             :url  "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.8.0"]
-                 [org.clojure/clojurescript "1.8.40"]
-                 [org.omcljs/om "1.0.0-alpha37" :exclusions [cljsjs/react cljsjs/react-dom]]
+                 [org.clojure/clojurescript "1.9.908"]
+                 [org.omcljs/om "1.0.0-alpha37"]
                  [com.stuartsierra/component "0.3.1"]
                  [com.cemerick/piggieback "0.2.1"]
+                 [cljsjs/react "15.6.1-1"]
+                 [cljsjs/react-dom "15.6.1-1"]
                  [figwheel-sidecar "0.5.0-2" :scope "test"]
                  [com.cemerick/piggieback "0.2.1"]
                  [org.clojure/tools.nrepl "0.2.10"]
@@ -19,8 +21,8 @@
                  [juxt.modular/wire-up "0.5.0"]
                  [juxt.modular/aleph "0.1.4"]
                  [com.andrewmcveigh/cljs-time "0.4.0"]
-                 [cljs-react-material-ui "0.2.47"]
-                 [cljsjs/material-ui-chip-input "0.15.0-0"]
+                 [cljs-react-material-ui "0.2.50"]
+                 [cljsjs/material-ui-chip-input "0.17.2-0"]
                  [prismatic/schema "1.1.1"]
                  [print-foo-cljs "2.0.0"]]
 
