@@ -3,12 +3,13 @@
             [cljs-react-material-ui-example.figwheel :as f]))
 
 
-(def config
-  {:web-port 8999})
+(defn -main []
+  (def config
+    {:web-port 8999})
 
-(cljs-react-material-ui-example/dev-start config)
-(println (str "Started server on port " (:web-port config)))
-(.addShutdownHook (Runtime/getRuntime)
-                  (Thread. #(do (cljs-react-material-ui-example/stop)
-                                (println "Server stopped"))))
-(f/start-fig!)
+  (cljs-react-material-ui-example/dev-start config)
+  (println (str "Started server on port " (:web-port config)))
+  (.addShutdownHook (Runtime/getRuntime)
+                    (Thread. #(do (cljs-react-material-ui-example/stop)
+                                  (println "Server stopped"))))
+  (f/start-fig!))
